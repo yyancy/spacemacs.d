@@ -43,6 +43,9 @@ This function should only modify configuration layer settings."
      emacs-lisp
      ;; git
      helm
+     (auto-completion :variables
+                      auto-completion-enable-snippets-in-popup t
+                      auto-completion-enable-help-tooltip t)
     (python :variables python-backend 'lsp)
      ;; lsp
      ;; markdown
@@ -65,7 +68,8 @@ This function should only modify configuration layer settings."
    ;; `dotspacemacs/user-config'. To use a local version of a package, use the
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(
+                                      evil-replace-with-register)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -572,6 +576,8 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  (setq evil-replace-with-register-key (kbd "s"))
+  (evil-replace-with-register-install)
   (define-key evil-insert-state-map (kbd "C-a") 'beginning-of-line-text)
   (define-key evil-insert-state-map (kbd "C-e") 'end-of-line)
   (define-key evil-insert-state-map (kbd "C-e") 'end-of-line)
