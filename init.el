@@ -41,16 +41,55 @@ This function should only modify configuration layer settings."
      ;; auto-completion
      ;; better-defaults
      emacs-lisp
-     ;; git
+     (git :variables
+          git-magit-status-fullscreen t
+          magit-diff-refine-hunk t
+          git-enable-magit-todos-plugin t)
+     (version-control :variables
+                      version-control-diff-tool 'diff-hl
+                      version-control-global-margin t)
      helm
      (auto-completion :variables
+                      auto-completion-enable-sort-by-usage t
                       auto-completion-enable-snippets-in-popup t
                       auto-completion-enable-help-tooltip t)
     (python :variables python-backend 'lsp)
-     ;; lsp
+     (lsp :variables
+          ;; popup documentation
+          lsp-ui-doc-enable t               ;; documentation popups
+          lsp-ui-doc-show-with-cursor nil   ;; doc popup triggered by cursor
+          lsp-ui-doc-show-with-mouse nil    ;; doc popup triggered by mouse
+          lsp-ui-doc-delay 1                ;; delay in seconds for popup to display
+          lsp-ui-doc-include-signature t    ;; include function signature
+          ;; lsp-ui-doc-position 'top       ;; top bottom at-point
+          ;; lsp-ui-doc-alignment 'window   ;; frame window
+
+          ;; code actions and diagnostics text as right-hand side of buffer
+          lsp-ui-sideline-enable nil
+          lsp-ui-sideline-show-code-actions nil
+          ;; lsp-ui-sideline-delay 500
+          ;; lsp-ui-sideline-show-diagnostics nil
+
+          ;; function reference count and test coverage
+          lsp-lens-enable t
+
+          ;; Efficient use of space in treemacs-lsp display
+          treemacs-space-between-root-nodes nil
+
+          ;; Optimization for large files
+          lsp-file-watch-threshold 10000
+          lsp-log-io nil
+          lsp-enable-symbol-highlighting t)
      ;; markdown
      multiple-cursors
      org
+     (spacemacs-modeline :variables
+                         doom-modeline-height 12
+                         doom-modeline-major-mode-color-icon t
+                         doom-modeline-buffer-file-name-style 'relative-to-project
+                         doom-modeline-display-default-persp-name t
+                         doom-modeline-minor-modes nil
+                         doom-modeline-modal-icon nil)
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
@@ -298,7 +337,7 @@ It should only modify the values of Spacemacs settings."
    ;; Setting it to a non-nil value, allows for separate commands under `C-i'
    ;; and TAB or `C-m' and `RET'.
    ;; In the terminal, these pairs are generally indistinguishable, so this only
-   ;; works in the GUI. (default nil)
+   ;; works in the GUI. (default nil )
    dotspacemacs-distinguish-gui-tab nil
 
    ;; Name of the default layout (default "Default")
@@ -437,7 +476,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil and `dotspacemacs-activate-smartparens-mode' is also non-nil,
    ;; `smartparens-strict-mode' will be enabled in programming modes.
    ;; (default nil)
-   dotspacemacs-smartparens-strict-mode nil
+   dotspacemacs-smartparens-strict-mode t
 
    ;; If non-nil smartparens-mode will be enabled in programming modes.
    ;; (default t)
@@ -446,7 +485,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc...
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
-   dotspacemacs-smart-closing-parenthesis nil
+   dotspacemacs-smart-closing-parenthesis t
 
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
@@ -576,12 +615,13 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  (setq scroll-margin 5)
   (setq evil-replace-with-register-key (kbd "s"))
   (evil-replace-with-register-install)
   (define-key evil-insert-state-map (kbd "C-a") 'beginning-of-line-text)
   (define-key evil-insert-state-map (kbd "C-e") 'end-of-line)
   (define-key evil-insert-state-map (kbd "C-e") 'end-of-line)
-  (define-key evil-insert-state-map (kbd "C-S-v") 'spacemacs/evil-mc-paste-after)
+  (define-key evil-insert-state-map (kbd "C-v") 'spacemacs/evil-mc-paste-after)
   (define-key evil-normal-state-map (kbd "0") 'beginning-of-line-text)
 )
 
@@ -598,7 +638,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(ac-ispell auto-complete auto-yasnippet blacken code-cells company-anaconda anaconda-mode cython-mode dap-mode lsp-docker bui yaml flycheck-pos-tip pos-tip fuzzy helm-c-yasnippet helm-company helm-lsp helm-pydoc importmagic epc ctable concurrent deferred live-py-mode lsp-origami origami lsp-pyright lsp-python-ms lsp-treemacs lsp-ui lsp-mode nose pip-requirements pipenv load-env-vars pippel poetry transient py-isort pydoc pyenv-mode pythonic pylookup pytest pyvenv sphinx-doc yapfify yasnippet-snippets yasnippet company-emoji company emoji-cheat-sheet-plus gh-md markdown-toc markdown-mode mmm-mode valign vmd-mode ws-butler writeroom-mode winum which-key volatile-highlights vim-powerline vi-tilde-fringe uuidgen use-package undo-tree treemacs-projectile treemacs-persp treemacs-icons-dired treemacs-evil toc-org term-cursor symon symbol-overlay string-inflection string-edit-at-point spacemacs-whitespace-cleanup spacemacs-purpose-popwin spaceline-all-the-icons space-doc restart-emacs request rainbow-delimiters quickrun popwin pcre2el password-generator paradox overseer org-superstar open-junk-file nameless multi-line macrostep lorem-ipsum link-hint inspector info+ indent-guide hybrid-mode hungry-delete holy-mode hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org helm-mode-manager helm-make helm-descbinds helm-ag google-translate golden-ratio font-lock+ flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-evilified-state evil-escape evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu emr elisp-slime-nav elisp-def editorconfig dumb-jump drag-stuff dotenv-mode dired-quick-sort diminish devdocs define-word column-enforce-mode clean-aindent-mode centered-cursor-mode auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line)))
+   '(browse-at-remote company-statistics diff-hl git-link git-messenger git-modes git-timemachine gitignore-templates helm-git-grep helm-ls-git magit-section smeargle with-editor ac-ispell auto-complete auto-yasnippet blacken code-cells company-anaconda anaconda-mode cython-mode dap-mode lsp-docker bui yaml flycheck-pos-tip pos-tip fuzzy helm-c-yasnippet helm-company helm-lsp helm-pydoc importmagic epc ctable concurrent deferred live-py-mode lsp-origami origami lsp-pyright lsp-python-ms lsp-treemacs lsp-ui lsp-mode nose pip-requirements pipenv load-env-vars pippel poetry transient py-isort pydoc pyenv-mode pythonic pylookup pytest pyvenv sphinx-doc yapfify yasnippet-snippets yasnippet company-emoji company emoji-cheat-sheet-plus gh-md markdown-toc markdown-mode mmm-mode valign vmd-mode ws-butler writeroom-mode winum which-key volatile-highlights vim-powerline vi-tilde-fringe uuidgen use-package undo-tree treemacs-projectile treemacs-persp treemacs-icons-dired treemacs-evil toc-org term-cursor symon symbol-overlay string-inflection string-edit-at-point spacemacs-whitespace-cleanup spacemacs-purpose-popwin spaceline-all-the-icons space-doc restart-emacs request rainbow-delimiters quickrun popwin pcre2el password-generator paradox overseer org-superstar open-junk-file nameless multi-line macrostep lorem-ipsum link-hint inspector info+ indent-guide hybrid-mode hungry-delete holy-mode hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org helm-mode-manager helm-make helm-descbinds helm-ag google-translate golden-ratio font-lock+ flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-evilified-state evil-escape evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu emr elisp-slime-nav elisp-def editorconfig dumb-jump drag-stuff dotenv-mode dired-quick-sort diminish devdocs define-word column-enforce-mode clean-aindent-mode centered-cursor-mode auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
